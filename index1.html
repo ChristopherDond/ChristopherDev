@@ -1,4 +1,74 @@
-<!doctype html>
+<?php
+// Configurações iniciais
+header('Content-Type: text/html; charset=utf-8');
+conecta();
+// Dados dos produtos
+$PRODUCTS = [
+    ['id' => 1, 'nome' => "Margherita", 'preco' => 35.00, 'tipo' => "Pizza", 'desc' => "Molho de tomate, mozzarella e manjericão fresco", 'img' => "https://images.unsplash.com/photo-1601924582975-1c2b2e2f85a0?auto=format&fit=crop&w=1200&q=80"],
+    ['id' => 2, 'nome' => "Calabresa", 'preco' => 38.00, 'tipo' => "Pizza", 'desc' => "Calabresa fatiada com cebola e orégano", 'img' => "https://images.unsplash.com/photo-1606756791743-3f0f9a6a2f7a?auto=format&fit=crop&w=1200&q=80"],
+    ['id' => 3, 'nome' => "Quatro Queijos", 'preco' => 42.00, 'tipo' => "Pizza", 'desc' => "Mozzarella, gorgonzola, parmesão e catupiry", 'img' => "https://images.unsplash.com/photo-1604908177522-0b6f7a5b3a3a?auto=format&fit=crop&w=1200&q=80"],
+    ['id' => 4, 'nome' => "Pepperoni", 'preco' => 45.00, 'tipo' => "Pizza", 'desc' => "Pepperoni e mozzarella", 'img' => "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=80"],
+    ['id' => 5, 'nome' => "Toscana", 'preco' => 40.00, 'tipo' => "Pizza", 'desc' => "Linguiça toscana, tomate e alho", 'img' => "https://images.unsplash.com/photo-1559056199-6417900b2a6b?auto=format&fit=crop&w=1200&q=80"],
+    ['id' => 6, 'nome' => "Portuguesa", 'preco' => 43.00, 'tipo' => "Pizza", 'desc' => "Presunto, ovos, ervilha, cebola e queijo", 'img' => "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=1200&q=80"],
+    ['id' => 7, 'nome' => "Vegetariana", 'preco' => 39.00, 'tipo' => "Pizza", 'desc' => "Legumes, mozzarella e manjericão", 'img' => "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=80"],
+    ['id' => 8, 'nome' => "Frango com Catupiry", 'preco' => 48.00, 'tipo' => "Pizza", 'desc' => "Frango desfiado com catupiry cremoso", 'img' => "https://images.unsplash.com/photo-1594007653346-2b9d5a3c3e9b?auto=format&fit=crop&w=1200&q=80"],
+    ['id' => 9, 'nome' => "Marguerita Especial", 'preco' => 50.00, 'tipo' => "Pizza", 'desc' => "Queijo burrata, tomates confit e manjericão", 'img' => "https://images.unsplash.com/photo-1542281286-9e0a16bb7366?auto=format&fit=crop&w=1200&q=80"],
+    ['id' => 10, 'nome' => "Calzone", 'preco' => 44.00, 'tipo' => "Pizza", 'desc' => "Recheado com presunto e queijo", 'img' => "https://images.unsplash.com/photo-1585238342023-78f1a3e3d8d0?auto=format&fit=crop&w=1200&q=80"],
+    ['id' => 11, 'nome' => "Refrigerante Lata", 'preco' => 6.00, 'tipo' => "Bebida", 'desc' => "Lata 350ml", 'img' => "https://images.unsplash.com/photo-1582719478181-3d4f8b3d3a3e?auto=format&fit=crop&w=1200&q=80"],
+    ['id' => 12, 'nome' => "Suco Natural 500ml", 'preco' => 8.00, 'tipo' => "Bebida", 'desc' => "Suco de frutas", 'img' => "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=80"],
+    ['id' => 13, 'nome' => "Água Mineral 500ml", 'preco' => 4.00, 'tipo' => "Bebida", 'desc' => "Garrafa", 'img' => "https://images.unsplash.com/photo-1570110531048-9b2f2d7e1f3e?auto=format&fit=crop&w=1200&q=80"]
+];
+
+// Função para formatar preço
+function formatPrice($price) {
+    return 'R$ ' . number_format($price, 2, ',', '.');
+}
+
+function conecta(){
+    $host = "localhost";
+    $usuario = "root";
+    $senha = "";
+    $banco = "pizzariaX10Definitivo";
+
+    $conn = mysqli_connect($host, $usuario, $senha, $banco);
+
+    if (!$conn) {
+        die("Falha na conexão: " . mysqli_connect_error());
+    }
+
+    echo "Conectado com sucesso!" . "<br>";
+
+    // 2. Escrever o SELECT
+    $sql = "SELECT 
+                p.id_pedido, 
+                pr.nome_produto, 
+                i.quantidade, 
+                i.preco_unitario
+            FROM tb_item_pedido AS i
+            JOIN tb_pedido AS p ON i.id_pedido = p.id_pedido
+            JOIN tb_produto AS pr ON i.id_produto = pr.id_produto;";
+
+    // 3. Executar a consulta
+    $result = $conn->query($sql);
+
+    // 4. Verificar se retornou resultados
+    if ($result->num_rows > 0) {
+        // 5. Mostrar os dados linha por linha
+        while ($row = $result->fetch_assoc()) {
+            echo "ID Pedido: " . $row["id_pedido"] . " - Nome do produto: " . $row["nome_produto"] . " - Quantidade: " . $row["quantidade"] . " - Preço: " . $row["preco_unitario"] . "<br>";
+        }
+    } else {
+        echo "Nenhum resultado encontrado.";
+    }
+
+    
+
+    // 6. Fechar a conexão
+    $conn->close();
+}
+
+?>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8" />
@@ -90,7 +160,7 @@
   <div class="brand">
     <div class="logo">PX10</div>
     <div>
-      <h1>Pizzaria X10</h1>
+      <h1>Pizzaria X10 - Senac da galera!</h1>
       <div class="tag">Pizzas artesanais • Entrega rápida</div>
     </div>
   </div>
@@ -123,14 +193,25 @@
     </div>
 
     <div class="promo">
-      
       <div class="txt">
         <h2>Combo Família — 25% OFF nas terças!</h2>
         <p>Peça duas pizzas grandes + 2 refrigerantes e ganhe pontos em dobro às terças-feiras.</p>
       </div>
     </div>
 
-    <div id="productsGrid" class="grid" style="margin-top:6px"></div>
+    <div id="productsGrid" class="grid" style="margin-top:6px">
+      <?php foreach ($PRODUCTS as $product): ?>
+      <div class="card">
+        <img src="<?php echo $product['img']; ?>" alt="<?php echo $product['nome']; ?>">
+        <h3><?php echo $product['nome']; ?></h3>
+        <div class="desc"><?php echo $product['desc']; ?></div>
+        <div class="meta">
+          <div class="price"><?php echo formatPrice($product['preco']); ?></div>
+          <button class="add" onclick="addToCart(<?php echo $product['id']; ?>)">Adicionar</button>
+        </div>
+      </div>
+      <?php endforeach; ?>
+    </div>
   </section>
 
   <aside>
@@ -187,7 +268,6 @@
         <button class="btn" onclick="redeemPoints()">Resgatar (50 pts = R$10)</button>
       </div>
     </div>
-
   </aside>
 </main>
 
@@ -210,35 +290,13 @@
 </div>
 
 <script>
-/* -------------------------
-  Data inicial (mais pizzas) — imagens atualizadas para fotos condizentes
--------------------------*/
-const PRODUCTS = [
-  { id:1, nome:"Margherita", preco:35.00, tipo:"Pizza", desc:"Molho de tomate, mozzarella e manjericão fresco", img:"https://images.unsplash.com/photo-1601924582975-1c2b2e2f85a0?auto=format&fit=crop&w=1200&q=80" },
-  { id:2, nome:"Calabresa", preco:38.00, tipo:"Pizza", desc:"Calabresa fatiada com cebola e orégano", img:"https://images.unsplash.com/photo-1606756791743-3f0f9a6a2f7a?auto=format&fit=crop&w=1200&q=80" },
-  { id:3, nome:"Quatro Queijos", preco:42.00, tipo:"Pizza", desc:"Mozzarella, gorgonzola, parmesão e catupiry", img:"https://images.unsplash.com/photo-1604908177522-0b6f7a5b3a3a?auto=format&fit=crop&w=1200&q=80" },
-  { id:4, nome:"Pepperoni", preco:45.00, tipo:"Pizza", desc:"Pepperoni e mozzarella", img:"https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=80" },
-  { id:5, nome:"Toscana", preco:40.00, tipo:"Pizza", desc:"Linguiça toscana, tomate e alho", img:"https://images.unsplash.com/photo-1559056199-6417900b2a6b?auto=format&fit=crop&w=1200&q=80" },
-  { id:6, nome:"Portuguesa", preco:43.00, tipo:"Pizza", desc:"Presunto, ovos, ervilha, cebola e queijo", img:"https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=1200&q=80" },
-  { id:7, nome:"Vegetariana", preco:39.00, tipo:"Pizza", desc:"Legumes, mozzarella e manjericão", img:"https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=80" },
-  { id:8, nome:"Frango com Catupiry", preco:48.00, tipo:"Pizza", desc:"Frango desfiado com catupiry cremoso", img:"https://images.unsplash.com/photo-1594007653346-2b9d5a3c3e9b?auto=format&fit=crop&w=1200&q=80" },
-  { id:9, nome:"Marguerita Especial", preco:50.00, tipo:"Pizza", desc:"Queijo burrata, tomates confit e manjericão", img:"https://images.unsplash.com/photo-1542281286-9e0a16bb7366?auto=format&fit=crop&w=1200&q=80" },
-  { id:10, nome:"Calzone", preco:44.00, tipo:"Pizza", desc:"Recheado com presunto e queijo", img:"https://images.unsplash.com/photo-1585238342023-78f1a3e3d8d0?auto=format&fit=crop&w=1200&q=80" },
-  { id:11, nome:"Refrigerante Lata", preco:6.00, tipo:"Bebida", desc:"Lata 350ml", img:"https://images.unsplash.com/photo-1582719478181-3d4f8b3d3a3e?auto=format&fit=crop&w=1200&q=80" },
-  { id:12, nome:"Suco Natural 500ml", preco:8.00, tipo:"Bebida", desc:"Suco de frutas", img:"https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=80" },
-  { id:13, nome:"Água Mineral 500ml", preco:4.00, tipo:"Bebida", desc:"Garrafa", img:"https://images.unsplash.com/photo-1570110531048-9b2f2d7e1f3e?auto=format&fit=crop&w=1200&q=80" }
-];
-
+const PRODUCTS = <?php echo json_encode($PRODUCTS, JSON_UNESCAPED_UNICODE); ?>;
 const COUPONS = [
   { code: 'PIZZA10', discount: 10.00, expires: '2025-12-31' },
   { code: 'REFRI5', discount: 5.00, expires: '2025-12-01' },
   { code: 'NATAL25', discount: 25.00, expires: '2025-12-25' },
   { code: 'PIZZA25', discount: 25.00, expires: '2025-11-01' },
 ];
-
-/*  ------------
-  Estado salvo no localStorage:
----------------*/
 
 function $id(id){return document.getElementById(id)}
 function money(v){ return 'R$ ' + v.toFixed(2).replace('.',',') }
@@ -268,7 +326,7 @@ function renderProducts(){
   items.forEach(p=>{
     const card = document.createElement('div'); card.className='card';
     card.innerHTML = `
-      
+      <img src="${p.img}" alt="${p.nome}">
       <h3>${p.nome}</h3>
       <div class="desc">${p.desc}</div>
       <div style="display:flex;justify-content:space-between;align-items:center" class="meta">
@@ -363,12 +421,6 @@ function closeModal(){ $id('modal').style.display = 'none' }
 function toast(msg){ const t = document.createElement('div'); t.innerText = msg; t.style.position='fixed'; t.style.bottom='22px'; t.style.left='50%'; t.style.transform='translateX(-50%)'; t.style.background='rgba(0,0,0,0.7)'; t.style.padding='10px 16px'; t.style.borderRadius='8px'; t.style.zIndex=2000; t.style.color='white'; document.body.appendChild(t); setTimeout(()=>{ t.style.transition='opacity .4s'; t.style.opacity='0' }, 2000); setTimeout(()=>document.body.removeChild(t),2600); }
 
 let dark = true; $id('themeToggle').addEventListener('click', ()=>{ dark = !dark; if(!dark){ document.body.style.background = '#fff'; document.body.style.color = '#111'; document.querySelectorAll('.card').forEach(c=>c.style.background = '#fff'); } else { document.body.style.background = 'linear-gradient(180deg,#071022 0%, #071522 60%)'; document.body.style.color = 'var(--text)'; document.querySelectorAll('.card').forEach(c=>c.style.background = 'linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.05))'); } });
-
-function renderOrdersModal(orderId){ const modal = $id('modal'); const content = $id('modalContent'); const title = $id('modalTitle'); title.innerText = 'Histórico de Pedidos'; if(state.orders.length===0){ content.innerHTML = '<div style="color:var(--muted)">Você ainda não fez pedidos.</div>'; } else { let html = '<div style="display:flex;flex-direction:column;gap:12px">'; state.orders.slice().reverse().forEach(o=>{ html += `<div style="padding:10px;border-radius:8px;background:rgba(255,255,255,0.02)"> <div style="display:flex;justify-content:space-between;align-items:center"> <div><strong>Pedido ${o.id}</strong><div style="font-size:12px;color:var(--muted)">${new Date(o.created).toLocaleString()}</div></div> <div style="font-weight:700">${money(o.total)}</div> </div> <div style="margin-top:8px">Itens:<div style="margin-top:6px">` + o.items.map(it=>{ const p = findProduct(it.id); return `<div style="display:flex;justify-content:space-between"><div>${it.qtd}x ${p.nome}</div><div>${money(it.price*it.qtd)}</div></div>`; }).join('') + `</div></div> <div style="margin-top:8px;font-size:13px;color:var(--muted)">Pontos ganhos: ${o.pointsEarned} ${o.coupon ? ' • Cupom usado: ' + o.coupon : ''}</div> </div>`; }); html += '</div>'; content.innerHTML = html; } openModal(); }
-
-function openHistory(){ renderOrdersModal(); }
-
-function saveStateAndUI(){ saveState(); updateUI(); }
 
 function updateUI(){ renderCart(); updatePointsUI(); renderProducts(); }
 updateUI();
