@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Pizzaria X10 — Definitivo (VS Code Ready)</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0f1724; --card:#0b1220; --muted:#9aa6b2; --accent:#ff6b35; --accent-2:#ffd89b;
+    --glass: rgba(255,255,255,0.03); --success:#48c774;
+    --surface:#0b1220; --text:#e6eef6;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Arial;
+    background:linear-gradient(180deg,#071022 0%, #071522 60%);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    padding-bottom:60px;
+  }
+
+  /* Header */
+  header{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;border-bottom:1px solid rgba(255,255,255,0.03);position:sticky;top:0;background:linear-gradient(90deg, rgba(11,17,26,0.9), rgba(7,9,12,0.85));backdrop-filter: blur(6px);z-index:999}
+  .brand{display:flex;gap:14px;align-items:center}
+  .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#111;font-weight:800;font-size:20px;box-shadow:0 8px 30px rgba(0,0,0,0.6)}
+  h1{font-size:18px;margin:0}
+  .tag{font-size:13px;color:var(--muted)}
+  .controls{display:flex;gap:10px;align-items:center}
+  .btn{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px 12px;border-radius:10px;color:var(--text);cursor:pointer}
+  .primary{background:var(--accent);color:#081019;border:none}
+  .small{font-size:13px;padding:6px 10px;border-radius:8px}
+
+  /* Layout */
+  .wrap{max-width:1200px;margin:22px auto;padding:0 18px;display:grid;grid-template-columns:1fr 360px;gap:20px}
+  .left{display:flex;flex-direction:column;gap:18px}
+  .search-row{display:flex;gap:12px;align-items:center}
+  .search{flex:1;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:var(--glass);color:var(--text)}
+  .select{padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text)}
+
+  /* Promo */
+  .promo{background:linear-gradient(90deg, rgba(255,107,53,0.12), rgba(255,216,155,0.06));padding:16px;border-radius:14px;border:1px solid rgba(255,255,255,0.03);display:flex;align-items:center;gap:12px}
+  .promo img{width:120px;height:80px;object-fit:cover;border-radius:10px}
+  .promo .txt{flex:1}
+  .promo h2{margin:0;font-size:16px}
+  .promo p{margin:4px 0 0;color:var(--muted);font-size:13px}
+
+  /* Product grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+  .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.05));padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;gap:8px;transition:transform .18s, box-shadow .18s}
+  .card:hover{transform:translateY(-6px);box-shadow:0 12px 40px rgba(0,0,0,0.5)}
+  .card img{width:100%;height:140px;object-fit:cover;border-radius:8px}
+  .card h3{margin:6px 0 0;font-size:15px}
+  .desc{font-size:13px;color:var(--muted)}
+  .meta{display:flex;justify-content:space-between;align-items:center;margin-top:auto}
+  .price{font-weight:700}
+  .add{background:var(--accent);color:#081019;border:none;padding:8px 10px;border-radius:10px;cursor:pointer}
+
+  /* Right column (cart + points) */
+  aside{position:sticky;top:26px;height:calc(100vh - 60px);overflow:auto;padding:12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03));border:1px solid rgba(255,255,255,0.03)}
+  .card-box{background:transparent;padding:12px;border-radius:10px}
+  .section-title{font-size:14px;margin-bottom:8px}
+  .cart-list{display:flex;flex-direction:column;gap:8px;max-height:260px;overflow:auto}
+  .cart-item{display:flex;justify-content:space-between;gap:8px;align-items:center;border-radius:8px;padding:8px;background:rgba(255,255,255,0.01)}
+  .qty{display:flex;gap:6px;align-items:center}
+  .small-btn{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:6px;border-radius:6px;cursor:pointer}
+
+  /* points */
+  .points{display:flex;flex-direction:column;gap:8px;padding:10px;border-radius:10px;background:linear-gradient(90deg, rgba(72,199,116,0.06), rgba(72,199,116,0.02));border:1px solid rgba(72,199,116,0.06)}
+  .progress{height:12px;background:rgba(255,255,255,0.03);border-radius:999px;overflow:hidden}
+  .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--success),#6ee7b7);width:40%}
+  .level{display:flex;justify-content:space-between;align-items:center}
+
+  /* footer */
+  footer{max-width:1200px;margin:30px auto;padding:18px;color:var(--muted);font-size:13px;text-align:center}
+
+  /* small screens */
+  @media (max-width:980px){
+    .wrap{grid-template-columns:1fr;padding:12px}
+    aside{position:relative;height:auto;top:0}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo">PX10</div>
+    <div>
+      <h1>Pizzaria X10</h1>
+      <div class="tag">Pizzas artesanais • Entrega rápida</div>
+    </div>
+  </div>
+  <div class="controls">
+    <div id="userPointsDisplay" style="text-align:right">
+      <div style="font-size:13px">Nível: <strong id="userLevel">—</strong></div>
+      <div style="font-size:12px;color:var(--muted)"><span id="pts">0</span> pontos</div>
+    </div>
+    <button class="btn small" onclick="openPointsPanel()">Minhas recompensas</button>
+    <button class="btn small" onclick="openHistory()">Histórico</button>
+    <button id="themeToggle" class="btn small">Tema</button>
+    <button class="btn primary small" onclick="openCart()">🛒 Carrinho (<span id="cartCount">0</span>)</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="left">
+    <div class="search-row">
+      <input id="q" class="search" placeholder="Buscar pizzas, bebidas, sabores..." oninput="renderProducts()" />
+      <select id="filterType" class="select" onchange="renderProducts()">
+        <option value="all">Todos</option>
+        <option value="Pizza">Pizzas</option>
+        <option value="Bebida">Bebidas</option>
+      </select>
+      <select id="sort" class="select" onchange="renderProducts()">
+        <option value="popular">Mais populares</option>
+        <option value="price-asc">Preço: menor</option>
+        <option value="price-desc">Preço: maior</option>
+      </select>
+    </div>
+
+    <div class="promo">
+      
+      <div class="txt">
+        <h2>Combo Família — 25% OFF nas terças!</h2>
+        <p>Peça duas pizzas grandes + 2 refrigerantes e ganhe pontos em dobro às terças-feiras.</p>
+      </div>
+    </div>
+
+    <div id="productsGrid" class="grid" style="margin-top:6px"></div>
+  </section>
+
+  <aside>
+    <div class="card-box">
+      <div class="section-title">Resumo do Carrinho</div>
+      <div class="cart-list" id="cartList"></div>
+      <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
+        <input id="couponInput" placeholder="Código de cupom" style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text)">
+        <button class="small-btn" onclick="applyCoupon()">Aplicar</button>
+      </div>
+      <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+        <div style="color:var(--muted)">Subtotal</div>
+        <div id="subtotal">R$ 0,00</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+        <div style="color:var(--muted)">Taxa de entrega</div>
+        <div id="shipping">R$ 8,00</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-weight:700">
+        <div>Total</div>
+        <div id="total">R$ 0,00</div>
+      </div>
+      <div style="margin-top:10px;display:flex;gap:8px">
+        <button class="btn" onclick="clearCart()">Limpar</button>
+        <button class="primary" style="flex:1" onclick="checkout()">Finalizar pedido</button>
+      </div>
+    </div>
+
+    <div style="height:12px"></div>
+
+    <div class="card-box points">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-size:13px;color:var(--muted)">Seus pontos</div>
+          <div style="font-weight:700;font-size:18px" id="pointsDisplay">0 pts</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:12px;color:var(--muted)">Nível</div>
+          <div style="font-weight:700" id="levelDisplay">—</div>
+        </div>
+      </div>
+      <div style="margin-top:8px">
+        <div class="progress"><i id="progressBar" style="width:10%"></i></div>
+        <div class="level" style="margin-top:6px">
+          <small class="muted">0</small>
+          <small class="muted">Próximo</small>
+        </div>
+      </div>
+      <div style="margin-top:8px;font-size:13px;color:var(--muted)">
+        Ganhe <strong>1 ponto</strong> a cada R$10 gastos. Use pontos para gerar cupons no painel de recompensas.
+      </div>
+      <div style="margin-top:10px;display:flex;gap:8px">
+        <button class="btn" onclick="openPointsPanel()">Ver recompensas</button>
+        <button class="btn" onclick="redeemPoints()">Resgatar (50 pts = R$10)</button>
+      </div>
+    </div>
+
+  </aside>
+</main>
+
+<footer>
+  <div>Pizzaria X10 • Telefone: (11) 4002-8922 • Endereços integrados</div>
+  <div style="margin-top:6px;color:var(--muted)">Dados de pedidos e pontos salvos localmente no seu navegador (localStorage).</div>
+</footer>
+
+<!-- Modais/overlays -->
+<div id="modal" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.5);z-index:1200">
+  <div id="modalInner" style="width:920px;max-width:96%;background:linear-gradient(180deg,#07101a,#08121a);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);max-height:88vh;overflow:auto;color:var(--text)">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3 id="modalTitle">Painel</h3>
+      <div>
+        <button class="btn" onclick="closeModal()">Fechar</button>
+      </div>
+    </div>
+    <div id="modalContent" style="margin-top:12px"></div>
+  </div>
+</div>
+
+<script>
+/* -------------------------
+  Data inicial (mais pizzas) — imagens atualizadas para fotos condizentes
+-------------------------*/
+const PRODUCTS = [
+  { id:1, nome:"Margherita", preco:35.00, tipo:"Pizza", desc:"Molho de tomate, mozzarella e manjericão fresco", img:"https://images.unsplash.com/photo-1601924582975-1c2b2e2f85a0?auto=format&fit=crop&w=1200&q=80" },
+  { id:2, nome:"Calabresa", preco:38.00, tipo:"Pizza", desc:"Calabresa fatiada com cebola e orégano", img:"https://images.unsplash.com/photo-1606756791743-3f0f9a6a2f7a?auto=format&fit=crop&w=1200&q=80" },
+  { id:3, nome:"Quatro Queijos", preco:42.00, tipo:"Pizza", desc:"Mozzarella, gorgonzola, parmesão e catupiry", img:"https://images.unsplash.com/photo-1604908177522-0b6f7a5b3a3a?auto=format&fit=crop&w=1200&q=80" },
+  { id:4, nome:"Pepperoni", preco:45.00, tipo:"Pizza", desc:"Pepperoni e mozzarella", img:"https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=80" },
+  { id:5, nome:"Toscana", preco:40.00, tipo:"Pizza", desc:"Linguiça toscana, tomate e alho", img:"https://images.unsplash.com/photo-1559056199-6417900b2a6b?auto=format&fit=crop&w=1200&q=80" },
+  { id:6, nome:"Portuguesa", preco:43.00, tipo:"Pizza", desc:"Presunto, ovos, ervilha, cebola e queijo", img:"https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=1200&q=80" },
+  { id:7, nome:"Vegetariana", preco:39.00, tipo:"Pizza", desc:"Legumes, mozzarella e manjericão", img:"https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=80" },
+  { id:8, nome:"Frango com Catupiry", preco:48.00, tipo:"Pizza", desc:"Frango desfiado com catupiry cremoso", img:"https://images.unsplash.com/photo-1594007653346-2b9d5a3c3e9b?auto=format&fit=crop&w=1200&q=80" },
+  { id:9, nome:"Marguerita Especial", preco:50.00, tipo:"Pizza", desc:"Queijo burrata, tomates confit e manjericão", img:"https://images.unsplash.com/photo-1542281286-9e0a16bb7366?auto=format&fit=crop&w=1200&q=80" },
+  { id:10, nome:"Calzone", preco:44.00, tipo:"Pizza", desc:"Recheado com presunto e queijo", img:"https://images.unsplash.com/photo-1585238342023-78f1a3e3d8d0?auto=format&fit=crop&w=1200&q=80" },
+  { id:11, nome:"Refrigerante Lata", preco:6.00, tipo:"Bebida", desc:"Lata 350ml", img:"https://images.unsplash.com/photo-1582719478181-3d4f8b3d3a3e?auto=format&fit=crop&w=1200&q=80" },
+  { id:12, nome:"Suco Natural 500ml", preco:8.00, tipo:"Bebida", desc:"Suco de frutas", img:"https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=80" },
+  { id:13, nome:"Água Mineral 500ml", preco:4.00, tipo:"Bebida", desc:"Garrafa", img:"https://images.unsplash.com/photo-1570110531048-9b2f2d7e1f3e?auto=format&fit=crop&w=1200&q=80" }
+];
+
+const COUPONS = [
+  { code: 'PIZZA10', discount: 10.00, expires: '2025-12-31' },
+  { code: 'REFRI5', discount: 5.00, expires: '2025-12-01' },
+  { code: 'NATAL25', discount: 25.00, expires: '2025-12-25' },
+  { code: 'PIZZA25', discount: 25.00, expires: '2025-11-01' },
+];
+
+/*  ------------
+  Estado salvo no localStorage:
+---------------*/
+
+function $id(id){return document.getElementById(id)}
+function money(v){ return 'R$ ' + v.toFixed(2).replace('.',',') }
+
+let state = {
+  cart: JSON.parse(localStorage.getItem('px_cart')||'[]'),
+  orders: JSON.parse(localStorage.getItem('px_orders')||'[]'),
+  points: Number(localStorage.getItem('px_points')||0),
+  coupon: JSON.parse(localStorage.getItem('px_coupon')||'null'),
+  ratings: JSON.parse(localStorage.getItem('px_ratings')||'{}')
+};
+
+function findProduct(id){ return PRODUCTS.find(p=>p.id===id)}
+function avgRating(id){ const arr = state.ratings[id] || []; if(!arr.length) return 0; return arr.reduce((s,a)=>s+a,0)/arr.length }
+
+function renderProducts(){
+  const q = ($id('q').value||'').toLowerCase();
+  const type = $id('filterType').value;
+  const sort = $id('sort').value;
+  let items = PRODUCTS.filter(p => (type==='all' || p.tipo===type) &&
+    (p.nome.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q) || p.tipo.toLowerCase().includes(q))
+  );
+  if(sort==='price-asc') items.sort((a,b)=>a.preco-b.preco);
+  if(sort==='price-desc') items.sort((a,b)=>b.preco-a.preco);
+  if(sort==='popular') items.sort((a,b)=>b.id-a.id);
+  const grid = $id('productsGrid'); grid.innerHTML='';
+  items.forEach(p=>{
+    const card = document.createElement('div'); card.className='card';
+    card.innerHTML = `
+      
+      <h3>${p.nome}</h3>
+      <div class="desc">${p.desc}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center" class="meta">
+        <div>
+          <div class="price">${money(p.preco)}</div>
+          <div style="font-size:12px;color:var(--muted)">Nota: ${avgRating(p.id).toFixed(1)} ⭐ (${(state.ratings[p.id]||[]).length})</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <button class="add" onclick="addToCart(${p.id})">Adicionar</button>
+          <button class="btn" style="padding:6px 8px;border-radius:8px" onclick="openRate(${p.id})">Avaliar</button>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function saveState(){ 
+  localStorage.setItem('px_cart', JSON.stringify(state.cart));
+  localStorage.setItem('px_orders', JSON.stringify(state.orders));
+  localStorage.setItem('px_points', state.points);
+  localStorage.setItem('px_coupon', JSON.stringify(state.coupon));
+  localStorage.setItem('px_ratings', JSON.stringify(state.ratings));
+  updateUI();
+}
+
+function addToCart(id){ const it = state.cart.find(i=>i.id===id); if(it) it.qtd++; else state.cart.push({id, qtd:1}); saveState(); toast('Adicionado ao carrinho'); }
+function changeQty(id,delta){ const it = state.cart.find(i=>i.id===id); if(!it) return; it.qtd += delta; if(it.qtd<=0) state.cart = state.cart.filter(x=>x.id!==id); saveState(); }
+function clearCart(){ state.cart = []; saveState(); toast('Carrinho limpo'); }
+
+function cartSubtotal(){ return state.cart.reduce((s,i)=>{ const p = findProduct(i.id); return s + (p ? p.preco * i.qtd : 0); },0); }
+function shippingFee(){ const sub = cartSubtotal(); return sub >= 100 ? 0 : 8.00; }
+function cartCount(){ return state.cart.reduce((s,i)=>s+i.qtd,0) }
+
+function renderCart(){
+  const list = $id('cartList'); list.innerHTML='';
+  if(state.cart.length===0) list.innerHTML='<div style="color:var(--muted)">Carrinho vazio</div>';
+  state.cart.forEach(it=>{
+    const p = findProduct(it.id);
+    const div = document.createElement('div'); div.className='cart-item';
+    div.innerHTML = `
+      <div style="min-width:0;flex:1">
+        <div style="font-weight:600">${p.nome}</div>
+        <div style="font-size:12px;color:var(--muted)">${money(p.preco)} x ${it.qtd}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+        <div style="font-weight:700">${money(p.preco * it.qtd)}</div>
+        <div class="qty">
+          <button class="small-btn" onclick="changeQty(${it.id},-1)">-</button>
+          <div style="padding:6px 10px">${it.qtd}</div>
+          <button class="small-btn" onclick="changeQty(${it.id},1)">+</button>
+          <button class="small-btn" onclick="removeItem(${it.id})">✕</button>
+        </div>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+  $id('subtotal').innerText = money(cartSubtotal());
+  $id('shipping').innerText = money(shippingFee());
+  const couponDiscount = state.coupon ? state.coupon.discount : 0;
+  const totalVal = Math.max(0, cartSubtotal() + shippingFee() - couponDiscount);
+  $id('total').innerText = money(totalVal);
+  $id('cartCount').innerText = cartCount();
+}
+
+function removeItem(id){ state.cart = state.cart.filter(i=>i.id!==id); saveState(); }
+function openCart(){ window.scrollTo({top:0,behavior:'smooth'}); alert('Use o painel à direita para ver o carrinho.'); }
+
+function applyCoupon(){ const code = ($id('couponInput').value||'').trim().toUpperCase(); if(!code) return toast('Digite um cupom'); const found = COUPONS.find(c=>c.code===code); if(!found) return toast('Cupom inválido'); const exp = new Date(found.expires + 'T23:59:59'); if(exp < new Date()) return toast('Cupom expirado'); state.coupon = found; saveState(); toast('Cupom aplicado: ' + found.code); }
+function clearCoupon(){ state.coupon = null; saveState(); }
+
+function checkout(){ if(state.cart.length===0) return toast('Carrinho vazio'); const name = prompt('Nome completo para a entrega:'); if(!name) return toast('Nome obrigatório'); const phone = prompt('Telefone (ex: (11) 9xxxx-xxxx):'); const address = prompt('Endereço completo (rua, número, complemento):'); if(!address) return toast('Endereço obrigatório'); const subtotal = cartSubtotal(); const ship = shippingFee(); const couponDiscount = state.coupon ? state.coupon.discount : 0; const total = Math.max(0, subtotal + ship - couponDiscount); const pointsEarned = Math.floor(total / 10); state.points += pointsEarned; const order = { id: Date.now(), created: new Date().toISOString(), items: state.cart.map(i=>({id:i.id,qtd:i.qtd,price: findProduct(i.id).preco})), subtotal, ship, coupon: state.coupon ? state.coupon.code : null, total, pointsEarned, customer: {name,phone,address} }; state.orders.push(order); state.cart = []; state.coupon = null; saveState(); toast(`Pedido criado! Você ganhou ${pointsEarned} pts — Total: ${money(total)}`); renderOrdersModal(order.id); }
+
+function getLevel(points){ if(points >= 300) return {name:'Ouro', next: null, threshold:300}; if(points >= 100) return {name:'Prata', next:300, threshold:100}; return {name:'Bronze', next:100, threshold:0}; }
+
+function updatePointsUI(){ $id('pointsDisplay').innerText = state.points + ' pts'; const lvl = getLevel(state.points); $id('levelDisplay').innerText = lvl.name; $id('userLevel').innerText = lvl.name; $id('pts').innerText = state.points; let pct = 0; if(lvl.next){ pct = Math.min(100, Math.round((state.points - lvl.threshold) / (lvl.next - lvl.threshold) * 100)); } else pct = 100; $id('progressBar').style.width = pct + '%'; }
+
+function redeemPoints(){ if(state.points < 50) return toast('Você precisa de 50 pontos para resgatar R$10'); state.points -= 50; const newCoupon = { code: 'PTS10-' + Date.now().toString().slice(-4), discount: 10.00, expires: new Date(Date.now() + 1000*60*60*24*30).toISOString().slice(0,10) }; COUPONS.push({ code: newCoupon.code, discount: newCoupon.discount, expires: newCoupon.expires }); toast('Resgatado! Cupom gerado: ' + newCoupon.code); saveState(); }
+
+function renderOrdersModal(orderId){ const modal = $id('modal'); const content = $id('modalContent'); const title = $id('modalTitle'); title.innerText = 'Histórico de Pedidos'; if(state.orders.length===0){ content.innerHTML = '<div style="color:var(--muted)">Você ainda não fez pedidos.</div>'; } else { let html = '<div style="display:flex;flex-direction:column;gap:12px">'; state.orders.slice().reverse().forEach(o=>{ html += `<div style="padding:10px;border-radius:8px;background:rgba(255,255,255,0.02)"> <div style="display:flex;justify-content:space-between;align-items:center"> <div><strong>Pedido ${o.id}</strong><div style="font-size:12px;color:var(--muted)">${new Date(o.created).toLocaleString()}</div></div> <div style="font-weight:700">${money(o.total)}</div> </div> <div style="margin-top:8px">Itens:<div style="margin-top:6px">` + o.items.map(it=>{ const p = findProduct(it.id); return `<div style="display:flex;justify-content:space-between"><div>${it.qtd}x ${p.nome}</div><div>${money(it.price*it.qtd)}</div></div>`; }).join('') + `</div></div> <div style="margin-top:8px;font-size:13px;color:var(--muted)">Pontos ganhos: ${o.pointsEarned} ${o.coupon ? ' • Cupom usado: ' + o.coupon : ''}</div> </div>`; }); html += '</div>'; content.innerHTML = html; } openModal(); }
+
+function openHistory(){ renderOrdersModal(); }
+
+function openPointsPanel(){ const title = $id('modalTitle'); const content = $id('modalContent'); title.innerText = 'Recompensas e pontos'; content.innerHTML = ` <div style="display:flex;gap:12px;flex-wrap:wrap"> <div style="flex:1;min-width:260px"> <h4>Seus pontos: <strong>${state.points}</strong></h4> <div style="margin-top:8px">Nível: <strong>${getLevel(state.points).name}</strong></div> <div style="margin-top:12px;font-size:13px;color:var(--muted)">Troque 50 pontos por R$10 de desconto (gera cupom válido por 30 dias).</div> <div style="margin-top:12px"><button class="primary" onclick="redeemPoints(); closeModal();">Resgatar 50 pts</button></div> </div> <div style="flex:1;min-width:260px"> <h4>Cupons ativos</h4> <div style="margin-top:8px;color:var(--muted)">Cupons fornecidos pelo sistema:</div> <ul style="margin-top:8px">` + COUPONS.map(c=>`<li style="margin:6px 0">${c.code} — R$ ${c.discount.toFixed(2)} • expira ${c.expires}</li>`).join('') + `</ul> </div> </div> `; openModal(); }
+
+function openRate(productId){ const title = $id('modalTitle'); const content = $id('modalContent'); const p = findProduct(productId); title.innerText = `Avaliar: ${p.nome}`; content.innerHTML = ` <div style="display:flex;gap:12px;align-items:center">  <div style="flex:1"> <div style="font-weight:700">${p.nome}</div> <div style="color:var(--muted);font-size:13px">${p.desc}</div> <div style="margin-top:12px"> <label>Nota (1 a 5)</label> <select id="rateSelect" style="margin-left:8px;padding:6px;border-radius:6px;background:transparent;color:var(--text)"> <option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option> </select> <button class="btn" style="margin-left:8px" onclick="submitRating(${productId})">Enviar</button> </div> </div> </div> `; openModal(); }
+function submitRating(productId){ const v = Number($id('rateSelect').value); if(!state.ratings[productId]) state.ratings[productId]=[]; state.ratings[productId].push(v); saveState(); closeModal(); toast('Avaliação enviada — obrigada!'); }
+
+function openModal(){ $id('modal').style.display = 'flex'; window.scrollTo({top:0,behavior:'smooth'}) }
+function closeModal(){ $id('modal').style.display = 'none' }
+
+function toast(msg){ const t = document.createElement('div'); t.innerText = msg; t.style.position='fixed'; t.style.bottom='22px'; t.style.left='50%'; t.style.transform='translateX(-50%)'; t.style.background='rgba(0,0,0,0.7)'; t.style.padding='10px 16px'; t.style.borderRadius='8px'; t.style.zIndex=2000; t.style.color='white'; document.body.appendChild(t); setTimeout(()=>{ t.style.transition='opacity .4s'; t.style.opacity='0' }, 2000); setTimeout(()=>document.body.removeChild(t),2600); }
+
+let dark = true; $id('themeToggle').addEventListener('click', ()=>{ dark = !dark; if(!dark){ document.body.style.background = '#fff'; document.body.style.color = '#111'; document.querySelectorAll('.card').forEach(c=>c.style.background = '#fff'); } else { document.body.style.background = 'linear-gradient(180deg,#071022 0%, #071522 60%)'; document.body.style.color = 'var(--text)'; document.querySelectorAll('.card').forEach(c=>c.style.background = 'linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.05))'); } });
+
+function renderOrdersModal(orderId){ const modal = $id('modal'); const content = $id('modalContent'); const title = $id('modalTitle'); title.innerText = 'Histórico de Pedidos'; if(state.orders.length===0){ content.innerHTML = '<div style="color:var(--muted)">Você ainda não fez pedidos.</div>'; } else { let html = '<div style="display:flex;flex-direction:column;gap:12px">'; state.orders.slice().reverse().forEach(o=>{ html += `<div style="padding:10px;border-radius:8px;background:rgba(255,255,255,0.02)"> <div style="display:flex;justify-content:space-between;align-items:center"> <div><strong>Pedido ${o.id}</strong><div style="font-size:12px;color:var(--muted)">${new Date(o.created).toLocaleString()}</div></div> <div style="font-weight:700">${money(o.total)}</div> </div> <div style="margin-top:8px">Itens:<div style="margin-top:6px">` + o.items.map(it=>{ const p = findProduct(it.id); return `<div style="display:flex;justify-content:space-between"><div>${it.qtd}x ${p.nome}</div><div>${money(it.price*it.qtd)}</div></div>`; }).join('') + `</div></div> <div style="margin-top:8px;font-size:13px;color:var(--muted)">Pontos ganhos: ${o.pointsEarned} ${o.coupon ? ' • Cupom usado: ' + o.coupon : ''}</div> </div>`; }); html += '</div>'; content.innerHTML = html; } openModal(); }
+
+function openHistory(){ renderOrdersModal(); }
+
+function saveStateAndUI(){ saveState(); updateUI(); }
+
+function updateUI(){ renderCart(); updatePointsUI(); renderProducts(); }
+updateUI();
+window.addEventListener('beforeunload', ()=>saveState());
+window.addToCart = addToCart; window.openCart = openCart; window.openPointsPanel = openPointsPanel; window.openHistory = openHistory; window.removeItem = removeItem; window.changeQty = changeQty; window.clearCart = clearCart; window.checkout = checkout; window.applyCoupon = applyCoupon; window.redeemPoints = redeemPoints; window.openRate = openRate; window.openModal = openModal; window.closeModal = closeModal;
+if(!state.ratings) state.ratings = {};
+saveState();
+</script>
+</body>
+</html>
