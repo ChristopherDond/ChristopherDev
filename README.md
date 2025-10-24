@@ -1,7 +1,9 @@
 # ChristopherDev
 
-💻 Systems Analysis and Development (ADS) Student | Technology and Science 
+💻 Systems Analysis and Development (ADS) Student | Technology & Science Enthusiast
 
-Enthusiast I'm passionate about programming, focusing on Artificial Intelligence (AI), Machine Learning, Data Science, Python, Java, C, C#, Lua, SQL, and developing innovative solutions. My curiosity goes beyond code: I'm fascinated by astronomy, mathematics, engineering, and the exact sciences, always exploring how these fields connect and inspire creative technological solutions. 
+I’m passionate about programming and innovation, with a strong focus on Artificial Intelligence (AI), Machine Learning, Data Science, and development using Python, Java, HTML, CSS, C, PHP, JavaScript, C#, Lua, and SQL.
 
-My goal is to build a solid career in technology, contributing to projects that generate real impact and intelligent solutions. I value continuous learning, collaboration, and innovation, always open to exchanging ideas, exploring new challenges, and expanding my horizons.
+My curiosity extends beyond code — I’m deeply fascinated by astronomy, mathematics, engineering, and the exact sciences, always exploring how these fields intersect to inspire creative and intelligent technological solutions.
+
+My goal is to build a solid and impactful career in technology, contributing to projects that create real-world value and push the boundaries of innovation. I value continuous learning, collaboration, and curiosity, and I’m always open to new ideas, challenges, and opportunities to grow.
